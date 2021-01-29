@@ -104,5 +104,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
+    while (true) AirodumpLoop(handle);
+
     pcap_close(handle);
 }
