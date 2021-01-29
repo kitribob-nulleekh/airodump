@@ -1,3 +1,5 @@
+#include <cstdint>
+
 #ifndef SRC_RADIOTAPHDR_H
 #define SRC_RADIOTAPHDR_H
 
