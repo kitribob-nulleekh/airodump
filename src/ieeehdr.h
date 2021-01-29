@@ -1,3 +1,4 @@
+#include <cstdint>
 #include "mac.h"
 
 #ifndef SRC_IEEEHDR_H
