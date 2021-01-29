@@ -28,7 +28,7 @@ void Usage(char* arg) {
 }
 
 void Render() {
-    system("cls");
+    system("clear");
     printf("\nnulLeeKH's airodump\n");
     printf("\n[Beacon] BSSID\t\t\tPWR\tBeacons\tESSID\n");
     for (auto temp = beaconKey.begin(); beaconKey.end() != temp; ++temp) {
