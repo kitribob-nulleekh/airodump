@@ -7,6 +7,8 @@
 #include "radiotaphdr.h"
 #include "ieeehdr.h"
 
+#define FIX_SIZE 12
+
 struct PacketData {
     int power;
     int packets;
@@ -24,6 +26,33 @@ void Usage(char* arg) {
 }
 
 void AirodumpLoop(pcap_t* handle) {
+    struct pcap_pkthdr* hdr;
+    const u_char* pkt;
+    u_int ip, tcp, payload;
+    int res;
+
+    res = pcap_next_ex(handle, &hdr, &pkt);
+
+    if (0 == res) return;
+    else if (-1 == res || -2 == res) {
+        printf("FATAL: pcap_next_ex | res=%d", res);
+    }
+
+    auto* radiotapH = (radHdr*)(pkt);
+    auto* ieeeH = (ieeeHdr*)(pkt+RADIOTAP_SIZE);
+
+    if (PROBE_SUBTYPE != ieeeH->subtype && BEACON_SUBTYPE != ieeeH->subtype) return;
+
+    auto* ssidF = (ssidField*)(pkt+RADIOTAP_SIZE+IEEE_SIZE+FIX_SIZE);
+
+    uint8_t ssidLen = ssidF->len;
+    char* ssid = (char*)malloc(sizeof(char)*(ssidLen+1));
+    char* ssidTemp = (char*)(pkt+RADIOTAP_SIZE+IEEE_SIZE+FIX_SIZE+SSID_SIZE);
+    memcpy(ssid, ssidTemp, sizeof(char)*(ssidLen+1));
+    ssid[ssidLen]=0;
+
+    //InsertPacketData function
+    //Render function
 }
 
 int main(int argc, char* argv[]) {
