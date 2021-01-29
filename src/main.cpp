@@ -6,6 +6,9 @@ void Usage(char* arg) {
     printf("sample: %s wlan1\n", arg);
 }
 
+void AirodumpLoop(pcap_t* handle) {
+}
+
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         Usage(argv[0]);
