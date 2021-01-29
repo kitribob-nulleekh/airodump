@@ -1,5 +1,22 @@
 #include <cstdio>
 #include <pcap.h>
+#include <string>
+#include <map>
+#include <set>
+#include "mac.h"
+#include "radiotaphdr.h"
+#include "ieeehdr.h"
+
+struct PacketData {
+    int power;
+    int packets;
+    std::string ssid;
+};
+
+std::map<Mac, PacketData> beaconMap;
+std::set<Mac> beaconKey;
+std::map<Mac, PacketData> probeMap;
+std::set<Mac> probeKey;
 
 void Usage(char* arg) {
     printf("syntax: %s <interface>\n", arg);
