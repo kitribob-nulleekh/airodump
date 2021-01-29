@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <set>
+#include <utility>
 #include "mac.h"
 #include "radiotaphdr.h"
 #include "ieeehdr.h"
@@ -23,6 +24,26 @@ std::set<Mac> probeKey;
 void Usage(char* arg) {
     printf("syntax: %s <interface>\n", arg);
     printf("sample: %s wlan1\n", arg);
+}
+
+void InsertPacketData(Mac macAddr, uint8_t antPwr, std::string ssid, bool isProbe) {
+    PacketData newData{0, 0, ""};
+
+    if (isProbe) {
+        probeKey.insert(macAddr);
+        auto insertPosition = probeMap.find(macAddr);
+        if (probeMap.end() == insertPosition) probeMap[macAddr] = newData;
+        probeMap[macAddr].power = antPwr;
+        probeMap[macAddr].packets++;
+        probeMap[macAddr].ssid = std::move(ssid);
+    } else {
+        beaconKey.insert(macAddr);
+        auto insertPosition = beaconMap.find(macAddr);
+        if (beaconMap.end() == insertPosition) beaconMap[macAddr] = newData;
+        beaconMap[macAddr].power = antPwr;
+        beaconMap[macAddr].packets++;
+        beaconMap[macAddr].ssid = std::move(ssid);
+    }
 }
 
 void AirodumpLoop(pcap_t* handle) {
@@ -51,7 +72,7 @@ void AirodumpLoop(pcap_t* handle) {
     memcpy(ssid, ssidTemp, sizeof(char)*(ssidLen+1));
     ssid[ssidLen]=0;
 
-    //InsertPacketData function
+    InsertPacketData(ieeeH->bssid, radiotapH->atnSig, ssid, PROBE_SUBTYPE == ieeeH->subtype);
     //Render function
 }
 
