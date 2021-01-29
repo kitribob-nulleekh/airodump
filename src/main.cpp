@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 #include <utility>
+#include <iostream>
 #include "mac.h"
 #include "radiotaphdr.h"
 #include "ieeehdr.h"
@@ -24,6 +25,19 @@ std::set<Mac> probeKey;
 void Usage(char* arg) {
     printf("syntax: %s <interface>\n", arg);
     printf("sample: %s wlan1\n", arg);
+}
+
+void Render() {
+    system("cls");
+    printf("\nnulLeeKH's airodump\n");
+    printf("\n[Beacon] BSSID\t\t\tPWR\tBeacons\tESSID\n");
+    for (auto temp = beaconKey.begin(); beaconKey.end() != temp; ++temp) {
+        std::cout << (Mac)(*temp) << "\t\t\t" << beaconMap[(Mac)(*temp)].power << "\t" << beaconMap[(Mac)(*temp)].packets << "\t" << beaconMap[(Mac)(*temp)].ssid << std::endl;
+    }
+    printf("\n[Probe]  BSSID\t\t\tPWR\tBeacons\tESSID\n");
+    for (auto temp = probeKey.begin(); probeKey.end() != temp; ++temp) {
+        std::cout << (Mac)(*temp) << "\t\t\t" << probeMap[(Mac)(*temp)].power << "\t" << probeMap[(Mac)(*temp)].packets << "\t" << probeMap[(Mac)(*temp)].ssid << std::endl;
+    }
 }
 
 void InsertPacketData(Mac macAddr, uint8_t antPwr, std::string ssid, bool isProbe) {
@@ -73,7 +87,7 @@ void AirodumpLoop(pcap_t* handle) {
     ssid[ssidLen]=0;
 
     InsertPacketData(ieeeH->bssid, radiotapH->atnSig, ssid, PROBE_SUBTYPE == ieeeH->subtype);
-    //Render function
+    Render();
 }
 
 int main(int argc, char* argv[]) {
