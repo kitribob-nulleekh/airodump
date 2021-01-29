@@ -2,7 +2,7 @@ LDLIBS=-lpcap
 
 all: airodump
 
-airodump: main.o
+airodump: main.o mac.o
 	$(LINK.cc) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 clean:
