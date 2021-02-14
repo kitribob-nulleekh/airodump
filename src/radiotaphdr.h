@@ -6,7 +6,7 @@
 #define RADIOTAP_SIZE 18
 
 struct radHdr {
-    uint8_t res;
+    uint8_t rev;
     uint8_t pad;
     uint16_t len;
     uint32_t preFlag;
